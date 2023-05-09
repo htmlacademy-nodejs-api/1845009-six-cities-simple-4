@@ -1,6 +1,6 @@
 import { Coordinates } from './coordinates.type.js';
-import { HousingType } from './housing-type.enum.js';
-import { ServiceType } from './service-type.enum.js';
+import { Housing } from './housing.enum.js';
+import { Service } from './service.enum.js';
 import { User } from './user.type.js';
 
 export type Offer = {
@@ -12,11 +12,11 @@ export type Offer = {
   images: string[];
   isPremium: boolean;
   rating: number;
-  housingType: HousingType;
+  housingType: Housing;
   rooms: number;
   guests: number;
   price: number;
-  services: ServiceType[];
+  services: Service[];
   user: User;
   commentsCount: number;
   coordinates: Coordinates;

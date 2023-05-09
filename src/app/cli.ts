@@ -1,8 +1,6 @@
 import { CliCommandInterface } from '../core/cli-command/cli-command.interface';
 
-type ParsedCommand = {
-  [key: string]: string[]
-}
+type ParsedCommand = Record<string, string[]>;
 
 export default class CLIApplication {
   private commands: {[propertyName: string]: CliCommandInterface} = {};

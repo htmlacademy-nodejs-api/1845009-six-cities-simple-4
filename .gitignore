@@ -6,6 +6,8 @@
 /docs/
 .idea/*
 
+/mocks/mock-offers.tsv
+
 .DS_Store
 coverage
 *.log

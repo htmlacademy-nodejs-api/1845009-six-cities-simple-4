@@ -1,0 +1,66 @@
+{
+  "api": {
+    "titles": [
+      "Loft Studio in the Central Area",
+      "Waterfront with extraordinary view",
+      "Perfectly located Castro",
+      "Wood and stone place",
+      "Nice, cozy, warm big bed apartment",
+      "Amazing and Extremely Central Flat"
+    ],
+    "descriptions": [
+      "A new spacious villa, one floor. All commodities, jacuzzi and beautiful scenery. Ideal for families or friends.",
+      "Peaceful studio in the most wanted area in town. Quiet house Near of everything. Completely renovated. Lovely neighbourhood, lot of trendy shops, restaurants and bars in a walking distance.",
+      "Relax, rejuvenate and unplug in this ultimate rustic getaway experience in the country. In our beautiful screened Pondhouse, you can gaze at the stars and listen to the sounds of nature from your cozy warm bed.",
+      "This is a place for dreamers to reset, reflect, and create. Designed with a 'slow' pace in mind, our hope is that you enjoy every part of your stay; from making local coffee by drip in the morning, choosing the perfect record to put on as the sun sets.",
+      "Discover daily local life in city center, friendly neighborhood, clandestine casino, karaoke, old-style artisans, art gallery and artist studio downstairs.",
+      "I am happy to welcome you to my apartment in the city center! Three words: location, cosy and chic!"
+    ],
+    "previewImages": [
+      "https://img.freepik.com/free-photo/modern-luxury-hotel-and-office-reception-and-lounge-with-meeting-room_105762-1772.jpg",
+      "https://img.freepik.com/free-photo/3d-rendering-contemporary-modern-dining-room-and-living-room-with-luxury-decor_105762-2243.jpg",
+      "https://img.freepik.com/free-photo/hotel-room_23-2148095266.jpg",
+      "https://img.freepik.com/free-photo/breakfast-on-a-wooden-table-with-a-natural-view_53876-139869.jpg",
+      "https://img.freepik.com/free-photo/outdoor-swimming-pool-in-hotel-and-resort_74190-2151.jpg",
+      "https://img.freepik.com/free-photo/businesswoman-in-a-black-suit-in-the-office_1157-37458.jpg"
+    ],
+    "imagesSet": [
+      "https://img.freepik.com/premium-photo/minsk-belarus-august-2017-columns-in-guestroom-hall-reception-of-modern-luxury-hotel_97694-6575.jpg",
+      "https://img.freepik.com/free-photo/3d-rendering-loft-luxury-living-room-with-shelf-near-dining-table_105762-2053.jpg",
+      "https://img.freepik.com/free-photo/hotel-bedroom-with-double-bed-table-and-tv-set_1262-3034.jpg",
+      "https://img.freepik.com/free-photo/modern-luxury-hotel-and-office-reception-and-lounge-with-meeting-room_105762-1772.jpg",
+      "https://img.freepik.com/free-photo/white-pillow-on-bed-with-light-lamp_74190-11944.jpg",
+      "https://img.freepik.com/free-photo/modern-studio-apartment-design-with-bedroom-and-living-space_1262-12375.jpg",
+      "https://img.freepik.com/free-photo/luxury-classic-modern-bedroom-suite-in-hotel_105762-1787.jpg",
+      "https://img.freepik.com/free-photo/hotel-room-at-a-luxury-resort_53876-138105.jpg",
+      "https://img.freepik.com/premium-photo/contemporary-living-and-dining-room-modern-architecture-interior-orange-armchairs-solid-wood-table_701162-715.jpg",
+      "https://img.freepik.com/free-photo/a-table-lamp-with-a-cup-of-coffee-and-a-lamp-on-it_1340-23639.jpg",
+      "https://img.freepik.com/premium-photo/side-view-of-modern-loft-style-bedroom-with-metal-details-wooden-furniture-abstract-decor_264197-34718.jpg",
+      "https://img.freepik.com/free-photo/beautiful-hotel-insights-details_23-2149160775.jpg"
+    ],
+    "users": [
+      "John Dutton",
+      "Jack Shephard",
+      "Dexter Morgan",
+      "James McGill",
+      "Kate Austen",
+      "Bethany Dutton"
+    ],
+    "emails": [
+      "user12@mail.com",
+      "user22@mail.com",
+      "user32@mail.com",
+      "user42@mail.com",
+      "user52@mail.com",
+      "user53@mail.com"
+    ],
+    "avatars": [
+      "https://i.pinimg.com/736x/79/64/51/796451ff1a044e942f21678945c0d873.jpg",
+      "https://www.feelingthevibe.com/wp-content/uploads/2019/04/avatar-icon-of-girl-in-a-wide-brim-felt-hat-vector-16225029.jpg",
+      "https://pixelbox.ru/wp-content/uploads/2021/11/black-white-avatars-steam-pixelbox.ru-27.jpg",
+      "https://i.pinimg.com/736x/09/fa/7d/09fa7dbea731b34ce4377cc9d905664a.jpg",
+      "https://img.freepik.com/premium-vector/man-avatar-profile-round-icon_24640-14046.jpg",
+      "https://i.pinimg.com/originals/87/ff/14/87ff14780b70043d7a2e2d21fcdb26c1.png"
+    ]
+  }
+}

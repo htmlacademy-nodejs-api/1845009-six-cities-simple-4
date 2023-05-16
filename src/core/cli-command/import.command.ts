@@ -1,23 +1,30 @@
 import chalk from 'chalk';
 import TSVFileReader from '../file-reader/tsv-file-reader.js';
 import { CliCommandInterface } from './cli-command.interface.js';
+import { createOffer, getErrorMessage } from '../helpers/index.js';
 
 export default class ImportCommand implements CliCommandInterface {
   public readonly name = '--import';
 
-  public execute(filename: string): void {
+  public onLine(line: string) {
+    const offer = createOffer(line);
+    console.log(offer);
+  }
+
+  private onComplete(count: number) {
+    console.log(chalk.bold.cyan(`${count} rows imported`));
+  }
+
+  public async execute(filename: string): Promise<void> {
     const fileReader = new TSVFileReader(filename.trim());
 
-    try {
-      console.log(filename);
-      fileReader.read();
-      console.log(fileReader.toArray());
-    } catch (err) {
-      if (!(err instanceof Error)) {
-        throw err;
-      }
+    fileReader.on('line', this.onLine);
+    fileReader.on('end', this.onComplete);
 
-      console.log(chalk.bold.red(`Не удалось импортировать данные из файла по причине: «${err.message}»`));
+    try {
+      await fileReader.read();
+    } catch (err) {
+      console.log(chalk.bold.red(`Can't read the file: ${getErrorMessage(err)}`));
     }
   }
 }

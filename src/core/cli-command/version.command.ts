@@ -1,5 +1,5 @@
 import { readFileSync } from 'node:fs';
-import { CliCommandInterface } from './cli-command.interface';
+import { CliCommandInterface } from './cli-command.interface.js';
 import path from 'node:path';
 import chalk from 'chalk';
 

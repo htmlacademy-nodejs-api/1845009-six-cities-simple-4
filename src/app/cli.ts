@@ -3,7 +3,7 @@ import { CliCommandInterface } from '../core/cli-command/cli-command.interface.j
 type ParsedCommand = Record<string, string[]>;
 
 export default class CLIApplication {
-  private commands: {[propertyName: string]: CliCommandInterface} = {};
+  private commands: { [propertyName: string]: CliCommandInterface } = {};
   private defaultCommand = '--help';
 
   private parsedCommand(cliArguments: string[]): ParsedCommand {

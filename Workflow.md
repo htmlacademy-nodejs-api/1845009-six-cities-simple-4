@@ -82,10 +82,10 @@ npm run ts ./src/main.cli.ts -- --generate 10 ./mocks/mock-offers.tsv http://loc
 
 В папке mocks будет создан файл с тестовыми данными
 
-### Импортировать тестовые предложения
+### Импортировать тестовые предложения в базу данных
 
 ```bash
-npm run ts ./src/main.cli.ts -- --import ./mocks/mock-offers.tsv
+npm run ts ./src/main.cli.ts -- --import ./mocks/mock-offers.tsv <db_user> <db_password> localhost six-cities <salt>
 ```
 
 ## Структура проекта

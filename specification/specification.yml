@@ -1,0 +1,368 @@
+openapi: 3.1.0
+info:
+  title: API сервер для приложения "Шесть городов"
+  description: |-
+    * Список ресурсов и маршрутов проекта "Шесть городов".
+  license:
+    name: MIT
+    url: https://opensource.org/licences/MIT
+  version: 1.0.0
+tags:
+  - name: offers
+    description: Действия с предложениями по аренде
+  - name: users
+    description: Действия с пользователями
+  - name: comments
+    description: Действия с комментариями
+
+
+paths:
+  /users/register:
+    post:
+      tags:
+        - users
+      summary: Регистрация пользователя
+      description: Регистрирует нового пользователя.
+
+      requestBody:
+        description: Информация для создания нового пользователя
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/register/createUser'
+        required: true
+
+      responses:
+        "201":
+
+          description: Пользователь зарегистрирован. Создан объект пользователя.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/register/user'
+        "400":
+          description: Пользователь с таким email уже существует
+
+
+  /users/login:
+    post:
+      tags:
+        - users
+      summary: Авторизация пользователя
+      description: Авторизация пользователя на основе логина и пароля
+
+      requestBody:
+        description: Информация для авторизации
+        required: true
+
+      responses:
+          "200":
+            description: Пользователь авторизован.
+            headers:
+              X-Token:
+                schema:
+                  $ref: '#/components/schemas/login/token'
+
+          "401":
+            description: Полученные данные некорректны
+
+    get:
+      tags:
+        - users
+      summary: Проверка состояния пользователя
+      description: Возвращает информацию по авторизованному пользователю
+
+      requestHeaders:
+        description: Информация для проверки авторизации (токен)
+        headers:
+          X-Token:
+            schema:
+              $ref: '#/components/schemas/login/token'
+
+      responses:
+          "200":
+            description: Пользователь авторизован.
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/offers'
+
+          "401":
+            description: Пользователь не авторизован
+
+
+  /users/{userId}/avatar:
+    tags:
+      - users
+    summary: Загрузить изображения аватара
+    description: Загружает изображение аватара пользователя. Изображение
+      должно быть в формате png или jpg
+
+
+  /offers:
+    get:
+      tags:
+        - offers
+      summary: Получить предложения по аренде
+      description: Получает предложения по аренде (не более 60)
+
+      responses:
+        "200":
+          description: Предложения получены.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offers'
+
+    post:
+      tags:
+        - offers
+      summary: Создать предложение по аренде
+      description: Создает предложение по аренде
+
+      responses:
+        "200":
+          description: Предложение создано
+
+
+  /offers/{offerId}:
+    get:
+      tags:
+        - offers
+      summary: Получить предложение по аренде
+      description: Получить предложение по id
+
+      responses:
+        "200":
+          description: Получено предложение
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/offer'
+
+    put:
+      tags:
+        - offers
+      summary: Изменить предложение по аренде
+      description: Изменяет предложение по аренде
+
+  /comments/{offerId}:
+    get:
+      tags:
+        - comments
+      summary: Получить комментарии к предложению
+      description: Получить комментарии к предложению по id
+
+      responses:
+        "200":
+          description: Комментарии получены
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/comments'
+
+
+
+
+
+components:
+  schemas:
+    register:
+      createUser:
+        type: object
+
+        properties:
+          email:
+            type: string
+            example: jake@qmail.com
+
+          name:
+            type: string
+            example: Jake
+
+          password:
+            type: string
+            example: Abc1234
+
+      user:
+        type: object
+
+        properties:
+          id:
+            type: string
+            example: 2sfsfdf32324wer23466
+
+          email:
+            type: string
+            example: jake@qmail.com
+
+    login:
+      loginUser:
+        type: object
+
+        properties:
+          email:
+            type: string
+            example: jake@qmail.com
+
+          password:
+            type: string
+            example: 1234abcd
+
+      token:
+        type: string
+        example: XJWT3424lkjsdfsdf
+
+      user:
+        type: object
+
+        properties:
+          email:
+            type: string
+            example: jake@qmail.com
+
+          name:
+            type: string
+            example: Jake
+
+          avatar:
+            type: string
+            example: "img-1.png"
+
+          isPro:
+            type: boolean
+            example: false
+
+    offers:
+      type: array
+      items:
+        type: object
+        properties:
+          title:
+            type: string
+            example: Nice hotel
+          postDate:
+            type: string
+            example: Sat May 27 2023 19:50:45 GMT+0300 (Москва, стандартное время)
+          housingType:
+            type: string
+            example: Room
+          previewImage:
+            type: string
+            example: 'img/1.jpg'
+          city:
+            type: string
+            example: Amsterdam
+          isPremium:
+            type: boolean
+            example: true
+          price:
+            type: number
+            example: 3000
+          rating:
+            type: number
+            example: 4
+          commentsCount:
+            type: number
+            example: 10
+
+    offer:
+      type: object
+      properties:
+        title:
+          type: string
+          example: Hotel Amsterdam
+        description:
+          type: string
+          example: Such a lovely place
+        postDate:
+          type: string
+          example: Sat May 27 2023 19:50:45 GMT+0300 (Москва, стандартное время)
+        housingType:
+          type: string
+          example: Room
+        previewImage:
+          type: string
+          example: 'img/1.jpg'
+        images:
+          type: array
+          items: string
+          example: ['img/2.jpg', 'img/3.jpg', 'img/4.jpg', 'img/5.jpg', 'img/6.jpg', 'img/7.jpg']
+        city:
+          type: string
+          example: Amsterdam
+        isPremium:
+          type: boolean
+          example: true
+        price:
+          type: number
+          example: 3000
+        rooms:
+          type: number
+          example: 3
+        guests:
+          type: number
+          example: 3
+        rating:
+          type: number
+          example: 4
+        commentsCount:
+          type: number
+          example: 10
+        services:
+          type: array
+          items: string
+          example: ['Breakfast', 'Workspace', 'Washer']
+        user:
+          $ref: '#/components/schemas/login/user'
+        coordinates:
+          type: object
+          properties:
+            latitude:
+              type: number
+              example: 52.37021
+            longitude:
+              type: number
+              example: 4.895168
+
+    createComment:
+      type: object
+      properties:
+        comment:
+          type: string
+          example: Awesome!
+        rating:
+          type: number
+          example: 5
+
+    comment:
+      type: object
+      properties:
+        comment:
+          type: string
+          example: Awesome!
+        rating:
+          type: number
+          example: 5
+        date:
+          type: string
+          example: Sun May 28 2023 12:55:04 GMT+0300 (Москва, стандартное время)
+        user:
+          $ref: '#/components/schemas/login/user'
+
+    comments:
+      type: array
+      items:
+        $ref: '#/components/schemas/comment'
+
+
+
+
+
+
+
+
+
+
+
+

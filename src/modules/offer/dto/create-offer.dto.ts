@@ -10,13 +10,11 @@ export default class CreateOfferDto {
   public previewImage!: string;
   public images!: string[];
   public isPremium!: boolean;
-  public rating!: number;
   public housingType!: Housing;
   public rooms!: number;
   public guests!: number;
   public price!: number;
   public services!: Service[];
   public userId!: string;
-  public commentsCount!: number;
   public coordinates!: Coordinates;
 }

@@ -1,6 +1,6 @@
-import { Coordinates } from '../../../types/coordinates.type';
-import { Housing } from '../../../types/housing.enum';
-import { Service } from '../../../types/service.enum';
+import { Coordinates } from '../../../types/coordinates.type.js';
+import { Housing } from '../../../types/housing.enum.js';
+import { Service } from '../../../types/service.enum.js';
 
 export default class UpdateOfferDto {
   public title?: string;

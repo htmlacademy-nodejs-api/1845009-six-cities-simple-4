@@ -13,6 +13,10 @@ import offerResponseRdo from './rdo/offer-response.rdo.js';
 import UpdateOfferDto from './dto/update-offer.dto.js';
 import HttpError from '../../core/errors/http-error.js';
 import { StatusCodes } from 'http-status-codes';
+import { CommentServiceInterface } from '../comment/comment-service.interface.js';
+import CommentResponse from '../comment/rdo/comment-response.js';
+import { ValidateObjectIdMiddleWare } from '../../core/middlewares/validate-objectid.middleware.js';
+import { ValidateDtoMiddleWare } from '../../core/middlewares/validate-dto.middleware.js';
 
 type ParamsOfferDetails =
   | {
@@ -26,7 +30,9 @@ export default class OfferController extends Controller {
     @inject(AppComponent.LoggerInterface)
     protected readonly logger: LoggerInterface,
     @inject(AppComponent.OfferServiceInterface)
-    private readonly offerService: OfferServiceInterface
+    private readonly offerService: OfferServiceInterface,
+    @inject(AppComponent.CommentServiceInterface)
+    private readonly commentService: CommentServiceInterface
   ) {
     super(logger);
 
@@ -36,22 +42,26 @@ export default class OfferController extends Controller {
     this.addRoute({
       path: '/',
       method: HttpMethod.Post,
-      handler: this.createOffer,
+      handler: this.create,
+      middlewares: [new ValidateDtoMiddleWare(CreateOfferDto)]
     });
     this.addRoute({
       path: '/:offerId',
       method: HttpMethod.Get,
-      handler: this.showOffer,
+      handler: this.show,
+      middlewares: [new ValidateObjectIdMiddleWare('offerId')]
     });
     this.addRoute({
       path: '/:offerId',
       method: HttpMethod.Patch,
-      handler: this.updateOffer,
+      handler: this.update,
+      middlewares: [new ValidateObjectIdMiddleWare('offerId')]
     });
     this.addRoute({
       path: '/:offerId',
       method: HttpMethod.Delete,
-      handler: this.deleteOffer,
+      handler: this.delete,
+      middlewares: [new ValidateObjectIdMiddleWare('offerId')]
     });
   }
 
@@ -61,16 +71,24 @@ export default class OfferController extends Controller {
     this.ok(res, offersToResponse);
   }
 
-  public async showOffer(
+  public async show(
     { params }: Request<ParamsOfferDetails>,
     res: Response
   ): Promise<void> {
     const { offerId } = params;
     const offer = await this.offerService.findById(offerId);
+
+    if (!offer) {
+      throw new HttpError(
+        StatusCodes.NOT_FOUND,
+        `Offer with id ${offerId}`,
+        'OfferController'
+      );
+    }
     this.ok(res, fillDTO(offerResponseRdo, offer));
   }
 
-  public async createOffer(
+  public async create(
     {
       body,
     }: Request<
@@ -84,7 +102,7 @@ export default class OfferController extends Controller {
     this.created(res, result);
   }
 
-  public async updateOffer(
+  public async update(
     {
       body,
       params,
@@ -107,7 +125,7 @@ export default class OfferController extends Controller {
     this.ok(res, fillDTO(offerResponseRdo, updatedOffer));
   }
 
-  public async deleteOffer(
+  public async delete(
     { params }: Request<ParamsOfferDetails>,
     res: Response
   ): Promise<void> {
@@ -121,7 +139,24 @@ export default class OfferController extends Controller {
         'OfferController'
       );
     }
+    await this.commentService.deleteByOfferId(deletedOffer.id);
 
     this.noContent(res, deletedOffer);
+  }
+
+  public async getComments(
+    { params }: Request<ParamsOfferDetails, object, object>,
+    res: Response
+  ): Promise<void> {
+    if (! await this.offerService.exists(params.offerId)) {
+      throw new HttpError(
+        StatusCodes.NOT_FOUND,
+        `Offer with id ${params.offerId} not found`,
+        'OfferController'
+      );
+    }
+
+    const comments = await this.commentService.findByOfferId(params.offerId);
+    this.ok(res, fillDTO(CommentResponse, comments));
   }
 }

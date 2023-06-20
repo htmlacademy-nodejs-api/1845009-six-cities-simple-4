@@ -13,6 +13,7 @@ import { StatusCodes } from 'http-status-codes';
 import { fillDTO } from '../../core/helpers/common.js';
 import UserRdo from './rdo/user.rdo.js';
 import LoginUserDto from './dto/login-user.dto.js';
+import { ValidateDtoMiddleWare } from '../../core/middlewares/validate-dto.middleware.js';
 
 @injectable()
 export default class UserController extends Controller {
@@ -22,18 +23,30 @@ export default class UserController extends Controller {
     @inject(AppComponent.UserServiceInterface)
     private readonly userService: UserServiceInterface,
     @inject(AppComponent.ConfigInterface)
-    private readonly configService: ConfigInterface<RestSchema>,
+    private readonly configService: ConfigInterface<RestSchema>
   ) {
     super(logger);
     this.logger.info('Register routes for UserController...');
 
-    this.addRoute({path: '/register', method: HttpMethod.Post, handler: this.create});
-    this.addRoute({path: '/login', method: HttpMethod.Post, handler: this.login});
+    this.addRoute({
+      path: '/register',
+      method: HttpMethod.Post,
+      handler: this.create,
+      middlewares: [new ValidateDtoMiddleWare(CreateUserDto)],
+    });
+    this.addRoute({
+      path: '/login',
+      method: HttpMethod.Post,
+      handler: this.login,
+      middlewares: [new ValidateDtoMiddleWare(LoginUserDto)]
+    });
   }
 
   public async create(
-    { body }: Request<Record<string, unknown>, Record<string, unknown>, CreateUserDto>,
-    res: Response,
+    {
+      body,
+    }: Request<Record<string, unknown>, Record<string, unknown>, CreateUserDto>,
+    res: Response
   ): Promise<void> {
     const existsUser = await this.userService.findByEmail(body.email);
 
@@ -45,15 +58,17 @@ export default class UserController extends Controller {
       );
     }
 
-    const result = await this.userService.create(body, this.configService.get('SALT'));
-    this.created(
-      res,
-      fillDTO(UserRdo, result)
+    const result = await this.userService.create(
+      body,
+      this.configService.get('SALT')
     );
+    this.created(res, fillDTO(UserRdo, result));
   }
 
   public async login(
-    { body }: Request<Record<string, unknown>, Record<string, unknown>, LoginUserDto>,
+    {
+      body,
+    }: Request<Record<string, unknown>, Record<string, unknown>, LoginUserDto>,
     _res: Response
   ): Promise<void> {
     const existsUser = await this.userService.findByEmail(body.email);
@@ -62,7 +77,7 @@ export default class UserController extends Controller {
       throw new HttpError(
         StatusCodes.UNAUTHORIZED,
         `User with email ${body.email} not found.`,
-        'UserController',
+        'UserController'
       );
     }
 

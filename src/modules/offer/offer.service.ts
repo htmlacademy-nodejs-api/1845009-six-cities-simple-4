@@ -67,7 +67,7 @@ export default class OfferService implements OfferServiceInterface {
           commentsCount: 1,
         },
         '$set': {
-          rating: ((currentOffer.rating + newRating) / (currentOffer.commentsCount + 1)).toFixed(1)
+          rating: ((currentOffer.rating * currentOffer.commentsCount + newRating) / (currentOffer.commentsCount + 1)).toFixed(1)
         }})
       .exec();
   }

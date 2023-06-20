@@ -33,6 +33,9 @@ export default class offerResponseRdo {
   public rating!: number;
 
   @Expose()
+  public commentsCount!: number;
+
+  @Expose()
   public price!: number;
 
   @Expose()

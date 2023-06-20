@@ -8,6 +8,7 @@ import { getMongoURI } from '../core/helpers/db.js';
 import express, { Express } from 'express';
 import { ControllerInterface } from '../core/controller/controller.interface.js';
 import { ExceptionFiltersInterface } from '../core/exception-filters/exception-filters.interface.js';
+import CommentController from '../modules/comment/comment.controller.js';
 
 @injectable()
 export default class RestApplication {
@@ -22,6 +23,8 @@ export default class RestApplication {
     private readonly databaseClient: DatabaseClientInterface,
     @inject(AppComponent.OfferController)
     private readonly offerController: ControllerInterface,
+    @inject(AppComponent.CommentController)
+    private readonly commentController: CommentController,
     @inject(AppComponent.UserController)
     private readonly userController: ControllerInterface,
     @inject(AppComponent.ExceptionFiltersInterface)
@@ -56,6 +59,7 @@ export default class RestApplication {
   private async _initRoutes() {
     this.logger.info('Controller initialization...');
     this.expressApplication.use('/offers', this.offerController.router);
+    this.expressApplication.use('/comments', this.commentController.router);
     this.expressApplication.use('/users', this.userController.router);
     this.logger.info('Controller initialization completed');
   }

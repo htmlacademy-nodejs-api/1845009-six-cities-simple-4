@@ -1,11 +1,11 @@
 import {ClassConstructor} from 'class-transformer/types/interfaces/class-constructor.type.js';
 import { plainToInstance } from 'class-transformer';
-import { MiddleWareInterface } from '../../types/middleware.interface.js';
+import { MiddlewareInterface } from '../../types/middleware.interface.js';
 import { NextFunction, Request, Response } from 'express';
 import { validate } from 'class-validator';
 import { StatusCodes } from 'http-status-codes';
 
-export class ValidateDtoMiddleWare implements MiddleWareInterface {
+export class ValidateDtoMiddleWare implements MiddlewareInterface {
   constructor(private dto: ClassConstructor<object>) {}
 
   public async execute({body}: Request, res: Response, next: NextFunction): Promise<void> {

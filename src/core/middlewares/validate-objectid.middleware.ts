@@ -1,12 +1,12 @@
 import mongoose from 'mongoose';
-import { MiddleWareInterface } from '../../types/middleware.interface.js';
+import { MiddlewareInterface } from '../../types/middleware.interface.js';
 import { Request, Response, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import HttpError from '../errors/http-error.js';
 
 const { Types } = mongoose;
 
-export class ValidateObjectIdMiddleWare implements MiddleWareInterface {
+export class ValidateObjectIdMiddleWare implements MiddlewareInterface {
   constructor(private param: string) {}
 
   public execute({ params }: Request, _res: Response, next: NextFunction): void {

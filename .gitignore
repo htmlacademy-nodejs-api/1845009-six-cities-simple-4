@@ -13,4 +13,4 @@
 coverage
 *.log
 *.env
-/upload/
+/uploads/

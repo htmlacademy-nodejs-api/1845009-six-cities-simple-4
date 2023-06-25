@@ -6,6 +6,7 @@
 /docs/
 .idea/*
 ./mongodb
+/uploads/
 
 /mocks/mock-offers.tsv
 
@@ -13,4 +14,3 @@
 coverage
 *.log
 *.env
-/uploads/

@@ -18,6 +18,7 @@ import CommentResponse from '../comment/rdo/comment-response.js';
 import { ValidateObjectIdMiddleWare } from '../../core/middlewares/validate-objectid.middleware.js';
 import { ValidateDtoMiddleWare } from '../../core/middlewares/validate-dto.middleware.js';
 import DocumentExistsMiddleWare from '../../core/middlewares/document-exists.middleware.js';
+import { PrivateRouteMiddleWare } from '../../core/middlewares/private-route.middleware.js';
 
 type ParamsOfferDetails =
   | {
@@ -44,7 +45,10 @@ export default class OfferController extends Controller {
       path: '/',
       method: HttpMethod.Post,
       handler: this.create,
-      middlewares: [new ValidateDtoMiddleWare(CreateOfferDto)],
+      middlewares: [
+        new PrivateRouteMiddleWare(),
+        new ValidateDtoMiddleWare(CreateOfferDto),
+      ],
     });
     this.addRoute({
       path: '/:offerId',
@@ -60,6 +64,7 @@ export default class OfferController extends Controller {
       method: HttpMethod.Patch,
       handler: this.update,
       middlewares: [
+        new PrivateRouteMiddleWare(),
         new ValidateObjectIdMiddleWare('offerId'),
         new DocumentExistsMiddleWare(this.offerService, 'Offer', 'offerId'),
       ],
@@ -69,6 +74,7 @@ export default class OfferController extends Controller {
       method: HttpMethod.Delete,
       handler: this.delete,
       middlewares: [
+        new PrivateRouteMiddleWare(),
         new ValidateObjectIdMiddleWare('offerId'),
         new DocumentExistsMiddleWare(this.offerService, 'Offer', 'offerId'),
       ],
@@ -93,6 +99,7 @@ export default class OfferController extends Controller {
   public async create(
     {
       body,
+      user
     }: Request<
       Record<string, unknown>,
       Record<string, unknown>,
@@ -100,7 +107,7 @@ export default class OfferController extends Controller {
     >,
     res: Response
   ): Promise<void> {
-    const result = await this.offerService.create(body);
+    const result = await this.offerService.create({ ...body, userId: user.id });
     this.created(res, result);
   }
 

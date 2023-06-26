@@ -1,4 +1,4 @@
-import { UserType } from '../../../types/user-type.enum';
+import { UserType } from '../../../types/user-type.enum.js';
 
 export default class UpdateUserDto {
   public avatar?: string;

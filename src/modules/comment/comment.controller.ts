@@ -12,6 +12,7 @@ import { StatusCodes } from 'http-status-codes';
 import CommentResponse from './rdo/comment-response.js';
 import { fillDTO } from '../../core/helpers/common.js';
 import { ValidateDtoMiddleWare } from '../../core/middlewares/validate-dto.middleware.js';
+import { PrivateRouteMiddleWare } from '../../core/middlewares/private-route.middleware.js';
 
 @injectable()
 export default class CommentController extends Controller {
@@ -25,14 +26,22 @@ export default class CommentController extends Controller {
   ) {
     super(logger);
     this.logger.info('Register routes for CommentController...');
-    this.addRoute({path: '/', method: HttpMethod.Post, handler: this.create, middlewares: [new ValidateDtoMiddleWare(CreateCommentDto)]});
+    this.addRoute({
+      path: '/',
+      method: HttpMethod.Post,
+      handler: this.create,
+      middlewares: [
+        new PrivateRouteMiddleWare(),
+        new ValidateDtoMiddleWare(CreateCommentDto),
+      ],
+    });
   }
 
   public async create(
-    { body }: Request<object, object, CreateCommentDto>,
+    { body, user }: Request<object, object, CreateCommentDto>,
     res: Response
   ): Promise<void> {
-    if (!await this.offerService.exists(body.offerId)) {
+    if (!(await this.offerService.exists(body.offerId))) {
       throw new HttpError(
         StatusCodes.NOT_FOUND,
         `Offer with id ${body.offerId} not found`,
@@ -40,8 +49,11 @@ export default class CommentController extends Controller {
       );
     }
 
-    const comment = await this.commentService.create(body);
-    await this.offerService.addComment(body.rating, body.offerId); // Promise all!!!
+    const comment = await this.commentService.create({
+      ...body,
+      userId: user.id,
+    });
+    await this.offerService.addComment(body.rating, body.offerId);
     this.created(res, fillDTO(CommentResponse, comment));
   }
 }

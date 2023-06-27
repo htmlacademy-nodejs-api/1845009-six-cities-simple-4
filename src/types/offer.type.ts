@@ -1,3 +1,4 @@
+import { City } from './city.enum.js';
 import { Coordinates } from './coordinates.type.js';
 import { Housing } from './housing.enum.js';
 import { Service } from './service.enum.js';
@@ -7,7 +8,7 @@ export type Offer = {
   title: string;
   description: string;
   postDate: Date;
-  city: string;
+  city: City;
   previewImage: string;
   images: string[];
   isPremium: boolean;

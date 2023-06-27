@@ -14,13 +14,15 @@ import { StatusCodes } from 'http-status-codes';
 import { createJWT, fillDTO } from '../../core/helpers/common.js';
 import UserRdo from './rdo/user.rdo.js';
 import LoginUserDto from './dto/login-user.dto.js';
-import { ValidateDtoMiddleWare } from '../../core/middlewares/validate-dto.middleware.js';
-import { ValidateObjectIdMiddleWare } from '../../core/middlewares/validate-objectid.middleware.js';
+import { ValidateDtoMiddleware } from '../../core/middlewares/validate-dto.middleware.js';
+import { ValidateObjectIdMiddleware } from '../../core/middlewares/validate-objectid.middleware.js';
 import { UploadFileMiddleware } from '../../core/middlewares/upload-file.middleware.js';
 import DocumentExistsMiddleWare from '../../core/middlewares/document-exists.middleware.js';
 import { UnknownRecord } from '../../types/unknown-record.type.js';
 import { JWT_ALGORITHM } from './user.constant.js';
 import LoggedUserRdo from './rdo/logged-user.rdo.js';
+import UploadUserAvatarResponse from './rdo/upload-user-avatar.response.js';
+import { PrivateRouteMiddleware } from '../../core/middlewares/private-route.middleware.js';
 
 @injectable()
 export default class UserController extends Controller {
@@ -30,29 +32,30 @@ export default class UserController extends Controller {
     @inject(AppComponent.UserServiceInterface)
     private readonly userService: UserServiceInterface,
     @inject(AppComponent.ConfigInterface)
-    private readonly configService: ConfigInterface<RestSchema>
+    configService: ConfigInterface<RestSchema>
   ) {
-    super(logger);
+    super(logger, configService);
     this.logger.info('Register routes for UserController...');
 
     this.addRoute({
       path: '/register',
       method: HttpMethod.Post,
       handler: this.create,
-      middlewares: [new ValidateDtoMiddleWare(CreateUserDto)],
+      middlewares: [new ValidateDtoMiddleware(CreateUserDto)],
     });
     this.addRoute({
       path: '/login',
       method: HttpMethod.Post,
       handler: this.login,
-      middlewares: [new ValidateDtoMiddleWare(LoginUserDto)]
+      middlewares: [new ValidateDtoMiddleware(LoginUserDto)]
     });
     this.addRoute({
       path: '/:userId/avatar',
       method: HttpMethod.Post,
       handler: this.uploadAvatar,
       middlewares: [
-        new ValidateObjectIdMiddleWare('userId'),
+        new PrivateRouteMiddleware(),
+        new ValidateObjectIdMiddleware('userId'),
         new DocumentExistsMiddleWare(this.userService, 'User', 'userId'),
         new UploadFileMiddleware(this.configService.get('UPLOAD_DIRECTORY'), 'avatar')
       ]
@@ -112,10 +115,10 @@ export default class UserController extends Controller {
       }
     );
 
-    this.ok(res, fillDTO(LoggedUserRdo, {
-      email: user.email,
+    this.ok(res, {
+      ...fillDTO(LoggedUserRdo, user),
       token
-    }));
+    });
   }
 
   public async show (
@@ -128,9 +131,18 @@ export default class UserController extends Controller {
   }
 
   public async uploadAvatar(req: Request, res: Response) {
-    this.created(res, {
-      filepath: req.file?.path
-    });
+    if (! req.file?.filename) {
+      throw new HttpError(
+        StatusCodes.BAD_REQUEST,
+        'Image not found',
+        'UserController'
+      );
+    }
+    const {userId} = req.params;
+    const uploadFile = {avatar: req.file.filename};
+    console.log(uploadFile);
+    await this.userService.updateById(userId, uploadFile);
+    this.created(res, fillDTO(UploadUserAvatarResponse, uploadFile));
   }
 
   public async checkAuthenticate(req: Request, res: Response) {

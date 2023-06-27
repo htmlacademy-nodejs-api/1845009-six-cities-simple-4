@@ -6,7 +6,7 @@ import HttpError from '../errors/http-error.js';
 
 const { Types } = mongoose;
 
-export class ValidateObjectIdMiddleWare implements MiddlewareInterface {
+export class ValidateObjectIdMiddleware implements MiddlewareInterface {
   constructor(private param: string) {}
 
   public execute({ params }: Request, _res: Response, next: NextFunction): void {

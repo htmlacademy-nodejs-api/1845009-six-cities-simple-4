@@ -9,7 +9,9 @@ export const AppComponent = {
   OfferModel: Symbol.for('OfferModel'),
   CommentServiceInterface: Symbol.for('CommentServiceInterface'),
   CommentModel: Symbol.for('CommentModel'),
-  ExceptionFiltersInterface: Symbol.for('ExceptionFiltersInterface'),
+  HttpErrorExceptionFilter: Symbol.for('HttpErrorExceptionFilter'),
+  BaseExceptionFilter: Symbol.for('BaseExceptionFilter'),
+  ValidationExceptionFilter: Symbol.for('ValidationExceptionFilter'),
   OfferController: Symbol.for('OfferController'),
   UserController: Symbol.for('UserController'),
   CommentController: Symbol.for('CommentController')

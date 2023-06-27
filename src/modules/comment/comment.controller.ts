@@ -11,8 +11,10 @@ import HttpError from '../../core/errors/http-error.js';
 import { StatusCodes } from 'http-status-codes';
 import CommentResponse from './rdo/comment-response.js';
 import { fillDTO } from '../../core/helpers/common.js';
-import { ValidateDtoMiddleWare } from '../../core/middlewares/validate-dto.middleware.js';
-import { PrivateRouteMiddleWare } from '../../core/middlewares/private-route.middleware.js';
+import { ValidateDtoMiddleware } from '../../core/middlewares/validate-dto.middleware.js';
+import { PrivateRouteMiddleware } from '../../core/middlewares/private-route.middleware.js';
+import { ConfigInterface } from '../../core/config/config.interface.js';
+import { RestSchema } from '../../core/config/rest.schema.js';
 
 @injectable()
 export default class CommentController extends Controller {
@@ -22,17 +24,19 @@ export default class CommentController extends Controller {
     @inject(AppComponent.CommentServiceInterface)
     private readonly commentService: CommentServiceInterface,
     @inject(AppComponent.OfferServiceInterface)
-    private readonly offerService: OfferService
+    private readonly offerService: OfferService,
+    @inject(AppComponent.ConfigInterface)
+    configService: ConfigInterface<RestSchema>
   ) {
-    super(logger);
+    super(logger, configService);
     this.logger.info('Register routes for CommentController...');
     this.addRoute({
       path: '/',
       method: HttpMethod.Post,
       handler: this.create,
       middlewares: [
-        new PrivateRouteMiddleWare(),
-        new ValidateDtoMiddleWare(CreateCommentDto),
+        new PrivateRouteMiddleware(),
+        new ValidateDtoMiddleware(CreateCommentDto),
       ],
     });
   }

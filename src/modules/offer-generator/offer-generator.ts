@@ -15,11 +15,6 @@ enum WeekDay {
   LastDay = 7,
 }
 
-enum Rating {
-  MinRating = 1,
-  MaxRating = 5,
-}
-
 enum Price {
   MinPrice = 800,
   MaxPrice = 5000,
@@ -45,9 +40,7 @@ export default class OfferGenerator implements IOfferGenerator {
     const previewImage = getRandomItem<string>(this.mockData.previewImages);
     const images = getRandomItems<string>(this.mockData.imagesSet).join(';');
     const isPremium = getRandomItem<string>(['Premium', 'Default']);
-    const rating = getRandomValue(Rating.MinRating, Rating.MaxRating)
-      .toString()
-      .toString();
+    const rating = '0';
     const housingType = getRandomItem<string>([
       Housing.Apartment,
       Housing.Hotel,
@@ -73,7 +66,7 @@ export default class OfferGenerator implements IOfferGenerator {
     const email = getRandomItem<string>(this.mockData.emails);
     const avatar = getRandomItem<string>(this.mockData.avatars);
     const userType = getRandomItem<string>([UserType.Pro, UserType.Default]);
-    const commentCount = getRandomValue(0, 20);
+    const commentCount = '0';
     const coordinates = `${getRandomValue(
       48.85341,
       53.55073,

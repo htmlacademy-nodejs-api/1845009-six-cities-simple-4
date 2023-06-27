@@ -15,10 +15,12 @@ import HttpError from '../../core/errors/http-error.js';
 import { StatusCodes } from 'http-status-codes';
 import { CommentServiceInterface } from '../comment/comment-service.interface.js';
 import CommentResponse from '../comment/rdo/comment-response.js';
-import { ValidateObjectIdMiddleWare } from '../../core/middlewares/validate-objectid.middleware.js';
-import { ValidateDtoMiddleWare } from '../../core/middlewares/validate-dto.middleware.js';
-import DocumentExistsMiddleWare from '../../core/middlewares/document-exists.middleware.js';
-import { PrivateRouteMiddleWare } from '../../core/middlewares/private-route.middleware.js';
+import { ValidateObjectIdMiddleware } from '../../core/middlewares/validate-objectid.middleware.js';
+import { ValidateDtoMiddleware } from '../../core/middlewares/validate-dto.middleware.js';
+import DocumentExistsMiddleware from '../../core/middlewares/document-exists.middleware.js';
+import { PrivateRouteMiddleware } from '../../core/middlewares/private-route.middleware.js';
+import { ConfigInterface } from '../../core/config/config.interface.js';
+import { RestSchema } from '../../core/config/rest.schema.js';
 
 type ParamsOfferDetails =
   | {
@@ -34,9 +36,11 @@ export default class OfferController extends Controller {
     @inject(AppComponent.OfferServiceInterface)
     private readonly offerService: OfferServiceInterface,
     @inject(AppComponent.CommentServiceInterface)
-    private readonly commentService: CommentServiceInterface
+    private readonly commentService: CommentServiceInterface,
+    @inject(AppComponent.ConfigInterface)
+    configService: ConfigInterface<RestSchema>
   ) {
-    super(logger);
+    super(logger, configService);
 
     this.logger.info('Register routes for OfferController...');
 
@@ -46,8 +50,8 @@ export default class OfferController extends Controller {
       method: HttpMethod.Post,
       handler: this.create,
       middlewares: [
-        new PrivateRouteMiddleWare(),
-        new ValidateDtoMiddleWare(CreateOfferDto),
+        new PrivateRouteMiddleware(),
+        new ValidateDtoMiddleware(CreateOfferDto),
       ],
     });
     this.addRoute({
@@ -55,8 +59,8 @@ export default class OfferController extends Controller {
       method: HttpMethod.Get,
       handler: this.show,
       middlewares: [
-        new ValidateObjectIdMiddleWare('offerId'),
-        new DocumentExistsMiddleWare(this.offerService, 'Offer', 'offerId'),
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
       ],
     });
     this.addRoute({
@@ -64,9 +68,9 @@ export default class OfferController extends Controller {
       method: HttpMethod.Patch,
       handler: this.update,
       middlewares: [
-        new PrivateRouteMiddleWare(),
-        new ValidateObjectIdMiddleWare('offerId'),
-        new DocumentExistsMiddleWare(this.offerService, 'Offer', 'offerId'),
+        new PrivateRouteMiddleware(),
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
       ],
     });
     this.addRoute({
@@ -74,10 +78,19 @@ export default class OfferController extends Controller {
       method: HttpMethod.Delete,
       handler: this.delete,
       middlewares: [
-        new PrivateRouteMiddleWare(),
-        new ValidateObjectIdMiddleWare('offerId'),
-        new DocumentExistsMiddleWare(this.offerService, 'Offer', 'offerId'),
+        new PrivateRouteMiddleware(),
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
       ],
+    });
+    this.addRoute({
+      path: '/:offerId/comments',
+      method: HttpMethod.Get,
+      handler: this.getComments,
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.offerService, 'Offer', 'offerId'),
+      ]
     });
   }
 

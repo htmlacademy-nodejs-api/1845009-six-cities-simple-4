@@ -1,3 +1,4 @@
+import { City } from '../../types/city.enum.js';
 import { Housing } from '../../types/housing.enum.js';
 import { Offer } from '../../types/offer.type.js';
 import { Service } from '../../types/service.enum.js';
@@ -40,7 +41,9 @@ export function createOffer(offerData: string): Offer {
     title,
     description,
     postDate: new Date(postDate),
-    city,
+    city: City[
+      city as 'Amsterdam' | 'Paris' | 'Dusseldorf' | 'Hamburg' | 'Brussels' | 'Cologne'
+    ],
     previewImage,
     images: images.split(';').map((image) => image),
     isPremium: isPremium === 'Premium',

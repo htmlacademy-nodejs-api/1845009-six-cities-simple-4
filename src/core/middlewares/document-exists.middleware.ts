@@ -4,7 +4,7 @@ import HttpError from '../errors/http-error.js';
 import { StatusCodes } from 'http-status-codes';
 import { MiddlewareInterface } from '../../types/middleware.interface';
 
-export default class DocumentExistsMiddleWare implements MiddlewareInterface {
+export default class DocumentExistsMiddleware implements MiddlewareInterface {
   constructor(
     private readonly service: DocumentExistsInterface,
     private readonly entityName: string,
